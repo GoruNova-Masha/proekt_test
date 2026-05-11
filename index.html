@@ -6,36 +6,244 @@
   <title>Генерация идей для постов</title>
   <style>
     * { box-sizing: border-box; }
+
+    :root {
+      --bg-deep: #0c0e14;
+      --accent: #7c6cf5;
+      --accent-soft: rgba(124, 108, 245, 0.35);
+      --text: #e8eaf0;
+      --text-muted: #9aa3b8;
+      --card: rgba(22, 26, 38, 0.72);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --radius: 1.25rem;
+    }
+
     body {
-      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-      line-height: 1.6;
-      max-width: 36rem;
-      margin: 2rem auto;
-      padding: 0 1.25rem;
-      color: #1a1a1a;
-      background: #fafafa;
-    }
-    h1 {
-      font-size: 1.5rem;
-      font-weight: 600;
-      margin-bottom: 1.25rem;
-      letter-spacing: -0.02em;
-    }
-    ul {
       margin: 0;
-      padding-left: 1.25rem;
+      min-height: 100vh;
+      font-family: "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+      line-height: 1.55;
+      color: var(--text);
+      background: var(--bg-deep);
+      overflow-x: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
     }
+
+    /* Мягкие «орбы» на фоне */
+    .bg-glow {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .bg-glow::before,
+    .bg-glow::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.55;
+      animation: float-orb 18s ease-in-out infinite;
+    }
+
+    .bg-glow::before {
+      width: min(55vw, 420px);
+      height: min(55vw, 420px);
+      background: radial-gradient(circle, var(--accent-soft), transparent 70%);
+      top: -12%;
+      right: -8%;
+      animation-delay: 0s;
+    }
+
+    .bg-glow::after {
+      width: min(45vw, 340px);
+      height: min(45vw, 340px);
+      background: radial-gradient(circle, rgba(56, 189, 248, 0.22), transparent 70%);
+      bottom: -10%;
+      left: -5%;
+      animation: float-orb 22s ease-in-out infinite reverse;
+      animation-delay: -4s;
+    }
+
+    @keyframes float-orb {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(-4%, 6%) scale(1.05); }
+      66% { transform: translate(5%, -4%) scale(0.95); }
+    }
+
+    main {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 28rem;
+      padding: 2rem 1.75rem 2.25rem;
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      box-shadow:
+        0 0 0 1px rgba(0, 0, 0, 0.2),
+        0 24px 48px -12px rgba(0, 0, 0, 0.45),
+        0 0 80px -20px var(--accent-soft);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      animation: card-in 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    @keyframes card-in {
+      from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.98);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .eyebrow {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.65rem;
+      opacity: 0;
+      animation: fade-slide 0.6s ease 0.15s forwards;
+    }
+
+    h1 {
+      font-size: clamp(1.35rem, 4vw, 1.65rem);
+      font-weight: 650;
+      letter-spacing: -0.03em;
+      line-height: 1.25;
+      margin: 0 0 1.5rem;
+      background: linear-gradient(120deg, #fff 0%, #c8d0e8 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      opacity: 0;
+      animation: fade-slide 0.65s ease 0.28s forwards;
+    }
+
+    @keyframes fade-slide {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+
     li {
-      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      padding: 0.85rem 1rem;
+      border-radius: 0.75rem;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      transition:
+        color 0.35s ease,
+        border-color 0.35s ease,
+        background 0.35s ease,
+        transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+      opacity: 0;
+      transform: translateX(-12px);
+      animation: item-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    li:nth-child(1) { animation-delay: 0.45s; }
+    li:nth-child(2) { animation-delay: 0.58s; }
+    li:nth-child(3) { animation-delay: 0.71s; }
+
+    @keyframes item-in {
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    li::before {
+      content: attr(data-step);
+      flex-shrink: 0;
+      width: 1.75rem;
+      height: 1.75rem;
+      display: grid;
+      place-items: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--accent);
+      background: rgba(124, 108, 245, 0.12);
+      border-radius: 0.5rem;
+      transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease;
+    }
+
+    li:hover {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(124, 108, 245, 0.25);
+      transform: translateX(4px);
+    }
+
+    li:hover::before {
+      transform: scale(1.08) rotate(-3deg);
+      box-shadow: 0 0 20px var(--accent-soft);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .bg-glow::before,
+      .bg-glow::after {
+        animation: none;
+      }
+      main,
+      .eyebrow,
+      h1,
+      li {
+        animation: none;
+        opacity: 1;
+        transform: none;
+      }
+      li {
+        transition: none;
+      }
+      li:hover {
+        transform: none;
+      }
+      li:hover::before {
+        transform: none;
+      }
     }
   </style>
 </head>
 <body>
-  <h1>Генерация идей для постов</h1>
-  <ul>
-    <li>5 идей постов для экспертов</li>
-    <li>3 идеи на сегодня</li>
-    <li>Контент план на неделю</li>
-  </ul>
+  <div class="bg-glow" aria-hidden="true"></div>
+  <main>
+    <span class="eyebrow">Чеклист</span>
+    <h1>Генерация идей для постов</h1>
+    <ul>
+      <li data-step="1">5 идей постов для экспертов</li>
+      <li data-step="2">3 идеи на сегодня</li>
+      <li data-step="3">Контент план на неделю</li>
+    </ul>
+  </main>
 </body>
 </html>
