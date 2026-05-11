@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,14 +8,34 @@
     * { box-sizing: border-box; }
 
     :root {
-      --bg-deep: #0c0e14;
+      --bg: #0c0e14;
+      --bg-elev: rgba(22, 26, 38, 0.72);
       --accent: #7c6cf5;
       --accent-soft: rgba(124, 108, 245, 0.35);
+      --accent-2: rgba(56, 189, 248, 0.22);
       --text: #e8eaf0;
-      --text-muted: #9aa3b8;
-      --card: rgba(22, 26, 38, 0.72);
-      --card-border: rgba(255, 255, 255, 0.08);
+      --text-muted: #a2acc3;
+      --surface: rgba(255, 255, 255, 0.04);
+      --surface-border: rgba(255, 255, 255, 0.08);
+      --shadow: rgba(0, 0, 0, 0.45);
       --radius: 1.25rem;
+      --title-grad-1: #ffffff;
+      --title-grad-2: #c8d0e8;
+    }
+
+    html[data-theme="light"] {
+      --bg: #f6f7fb;
+      --bg-elev: rgba(255, 255, 255, 0.80);
+      --accent: #5c55ee;
+      --accent-soft: rgba(92, 85, 238, 0.22);
+      --accent-2: rgba(56, 189, 248, 0.18);
+      --text: #0f172a;
+      --text-muted: #4b5563;
+      --surface: rgba(15, 23, 42, 0.04);
+      --surface-border: rgba(15, 23, 42, 0.10);
+      --shadow: rgba(2, 6, 23, 0.18);
+      --title-grad-1: #0f172a;
+      --title-grad-2: #334155;
     }
 
     body {
@@ -24,12 +44,9 @@
       font-family: "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
       line-height: 1.55;
       color: var(--text);
-      background: var(--bg-deep);
+      background: var(--bg);
       overflow-x: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 1.5rem;
+      padding: 0;
     }
 
     /* Мягкие «орбы» на фоне */
@@ -63,7 +80,7 @@
     .bg-glow::after {
       width: min(45vw, 340px);
       height: min(45vw, 340px);
-      background: radial-gradient(circle, rgba(56, 189, 248, 0.22), transparent 70%);
+      background: radial-gradient(circle, var(--accent-2), transparent 70%);
       bottom: -10%;
       left: -5%;
       animation: float-orb 22s ease-in-out infinite reverse;
@@ -76,22 +93,48 @@
       66% { transform: translate(5%, -4%) scale(0.95); }
     }
 
-    main {
+    .page {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 1.5rem;
+    }
+
+    main.app {
       position: relative;
       z-index: 1;
       width: 100%;
       max-width: 28rem;
-      padding: 2rem 1.75rem 2.25rem;
-      background: var(--card);
-      border: 1px solid var(--card-border);
-      border-radius: var(--radius);
+      min-height: min(78vh, 680px);
+      padding: 1.25rem;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 1rem;
+      background: var(--bg-elev);
+      border: 1px solid var(--surface-border);
+      border-radius: calc(var(--radius) + 0.25rem);
       box-shadow:
         0 0 0 1px rgba(0, 0, 0, 0.2),
-        0 24px 48px -12px rgba(0, 0, 0, 0.45),
+        0 24px 48px -12px var(--shadow),
         0 0 80px -20px var(--accent-soft);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       animation: card-in 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    .app-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      padding: 0.25rem 0.25rem 0;
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      min-width: 0;
     }
 
     @keyframes card-in {
@@ -112,7 +155,7 @@
       letter-spacing: 0.14em;
       text-transform: uppercase;
       color: var(--accent);
-      margin-bottom: 0.65rem;
+      margin: 0;
       opacity: 0;
       animation: fade-slide 0.6s ease 0.15s forwards;
     }
@@ -122,13 +165,59 @@
       font-weight: 650;
       letter-spacing: -0.03em;
       line-height: 1.25;
-      margin: 0 0 1.5rem;
-      background: linear-gradient(120deg, #fff 0%, #c8d0e8 100%);
+      margin: 0;
+      background: linear-gradient(120deg, var(--title-grad-1) 0%, var(--title-grad-2) 100%);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
       opacity: 0;
       animation: fade-slide 0.65s ease 0.28s forwards;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .theme-toggle {
+      -webkit-tap-highlight-color: transparent;
+      appearance: none;
+      border: 1px solid var(--surface-border);
+      background: var(--surface);
+      color: var(--text);
+      height: 2.5rem;
+      width: 3.5rem;
+      border-radius: 999px;
+      padding: 0.25rem;
+      display: grid;
+      align-items: center;
+      justify-items: start;
+      cursor: pointer;
+      transition: background 0.25s ease, border-color 0.25s ease, transform 0.2s ease;
+    }
+
+    .theme-toggle:active {
+      transform: scale(0.98);
+    }
+
+    .theme-toggle .knob {
+      width: 2rem;
+      height: 2rem;
+      border-radius: 999px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.6));
+      box-shadow: 0 10px 20px -12px rgba(0, 0, 0, 0.45);
+      transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    html[data-theme="light"] .theme-toggle {
+      justify-items: end;
+    }
+
+    html[data-theme="light"] .theme-toggle .knob {
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.55));
+      box-shadow: 0 12px 22px -14px rgba(2, 6, 23, 0.35);
+    }
+
+    .content {
+      padding: 0.25rem 0;
     }
 
     @keyframes fade-slide {
@@ -157,8 +246,8 @@
       gap: 0.85rem;
       padding: 0.85rem 1rem;
       border-radius: 0.75rem;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.06);
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
       color: var(--text-muted);
       font-size: 0.95rem;
       transition:
@@ -199,7 +288,7 @@
 
     li:hover {
       color: var(--text);
-      background: rgba(255, 255, 255, 0.06);
+      background: color-mix(in srgb, var(--surface) 55%, var(--accent-soft));
       border-color: rgba(124, 108, 245, 0.25);
       transform: translateX(4px);
     }
@@ -209,12 +298,148 @@
       box-shadow: 0 0 20px var(--accent-soft);
     }
 
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+      padding-top: 0.25rem;
+    }
+
+    .status {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      padding: 0 0.25rem;
+      min-height: 1.1rem;
+    }
+
+    .status strong {
+      color: var(--text);
+      font-weight: 650;
+    }
+
+    .cta {
+      -webkit-tap-highlight-color: transparent;
+      appearance: none;
+      border: 0;
+      border-radius: 0.9rem;
+      height: 3.1rem;
+      padding: 0 1rem;
+      cursor: pointer;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: #ffffff;
+      background:
+        radial-gradient(120% 120% at 0% 0%, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0) 55%),
+        linear-gradient(135deg, #7c6cf5, #38bdf8);
+      box-shadow:
+        0 18px 30px -18px rgba(124, 108, 245, 0.55),
+        0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s ease, filter 0.2s ease;
+      isolation: isolate;
+    }
+
+    .cta::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background: conic-gradient(from 180deg, rgba(255,255,255,0), rgba(255,255,255,0.22), rgba(255,255,255,0));
+      transform: translateX(-45%) rotate(12deg);
+      opacity: 0.8;
+      animation: shimmer 2.4s ease-in-out infinite;
+      z-index: -1;
+    }
+
+    @keyframes shimmer {
+      0% { transform: translateX(-55%) rotate(12deg); opacity: 0.0; }
+      30% { opacity: 0.75; }
+      100% { transform: translateX(55%) rotate(12deg); opacity: 0.0; }
+    }
+
+    .cta:hover {
+      filter: brightness(1.05);
+      transform: translateY(-1px);
+    }
+
+    .cta:active {
+      transform: translateY(0);
+    }
+
+    .cta.is-busy {
+      filter: saturate(0.95);
+    }
+
+    .cta .label {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+    }
+
+    .spinner {
+      width: 1rem;
+      height: 1rem;
+      border-radius: 999px;
+      border: 2px solid rgba(255, 255, 255, 0.45);
+      border-top-color: rgba(255, 255, 255, 0.95);
+      display: none;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .cta.is-busy .spinner {
+      display: inline-block;
+    }
+
+    .cta.is-busy .spark {
+      animation: pop 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    @keyframes pop {
+      from { transform: scale(1); }
+      35% { transform: scale(1.06); }
+      to { transform: scale(1); }
+    }
+
+    /* Мобильный «app-like» режим */
+    @media (max-width: 520px) {
+      .page {
+        padding: 0.85rem;
+        place-items: stretch;
+      }
+
+      main.app {
+        max-width: none;
+        min-height: calc(100vh - 1.7rem);
+        border-radius: 1.35rem;
+        padding: 1rem;
+      }
+
+      .actions {
+        position: sticky;
+        bottom: 0;
+        padding-bottom: calc(0.25rem + env(safe-area-inset-bottom, 0px));
+        background: linear-gradient(to top, color-mix(in srgb, var(--bg-elev) 92%, transparent), transparent);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+      }
+
+      .cta {
+        height: 3.25rem;
+        border-radius: 1rem;
+      }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       .bg-glow::before,
       .bg-glow::after {
         animation: none;
       }
-      main,
+      main.app,
       .eyebrow,
       h1,
       li {
@@ -231,19 +456,127 @@
       li:hover::before {
         transform: none;
       }
+      .cta::before,
+      .spinner {
+        animation: none;
+      }
     }
   </style>
 </head>
 <body>
   <div class="bg-glow" aria-hidden="true"></div>
-  <main>
-    <span class="eyebrow">Чеклист</span>
-    <h1>Генерация идей для постов</h1>
-    <ul>
-      <li data-step="1">5 идей постов для экспертов</li>
-      <li data-step="2">3 идеи на сегодня</li>
-      <li data-step="3">Контент план на неделю</li>
-    </ul>
-  </main>
+  <div class="page">
+    <main class="app" aria-label="Генерация идей">
+      <header class="app-bar">
+        <div class="brand">
+          <span class="eyebrow">Чеклист</span>
+          <h1>Генерация идей для постов</h1>
+        </div>
+
+        <button class="theme-toggle" id="themeToggle" type="button" aria-label="Переключить тему" title="Переключить тему">
+          <span class="knob" aria-hidden="true"></span>
+        </button>
+      </header>
+
+      <section class="content" aria-label="Идеи">
+        <ul id="ideasList">
+          <li data-step="1">5 идей постов для экспертов</li>
+          <li data-step="2">3 идеи на сегодня</li>
+          <li data-step="3">Контент план на неделю</li>
+        </ul>
+      </section>
+
+      <footer class="actions" aria-label="Действия">
+        <div class="status" id="status" aria-live="polite"></div>
+        <button class="cta" id="generateBtn" type="button">
+          <span class="label spark">
+            <span class="spinner" aria-hidden="true"></span>
+            <span id="btnText">Сгенерировать идеи</span>
+          </span>
+        </button>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    (function () {
+      const html = document.documentElement;
+      const themeToggle = document.getElementById('themeToggle');
+      const generateBtn = document.getElementById('generateBtn');
+      const btnText = document.getElementById('btnText');
+      const status = document.getElementById('status');
+      const ideasList = document.getElementById('ideasList');
+
+      const storageKey = 'ideaGenTheme';
+      const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+      const savedTheme = localStorage.getItem(storageKey);
+
+      function setTheme(theme) {
+        html.setAttribute('data-theme', theme);
+        localStorage.setItem(storageKey, theme);
+      }
+
+      setTheme(savedTheme || (prefersLight ? 'light' : 'dark'));
+
+      themeToggle.addEventListener('click', function () {
+        const current = html.getAttribute('data-theme') || 'dark';
+        setTheme(current === 'dark' ? 'light' : 'dark');
+      });
+
+      const presets = [
+        [
+          '5 идей: разбор кейса клиента, мифы/ошибки, чеклист, до/после, ответы на 10 частых вопросов.',
+          '3 идеи на сегодня: 1) мини-инсайт, 2) одна ошибка и решение, 3) личный опыт с выводом.',
+          'Контент план на неделю: Пн — кейс, Ср — обучающий пост, Пт — разбор ошибки, Вс — Q&A/опрос.'
+        ],
+        [
+          '5 идей: разбор инструмента, «как я делаю X», сравнение подходов, шаблон/гайд, закулисье процесса.',
+          '3 идеи на сегодня: 1) тезис + пример, 2) «что делать, если…», 3) короткая история клиента.',
+          'Контент план на неделю: Пн — экспертный тезис, Вт — мини-урок, Чт — кейс, Сб — подборка/ресурсы.'
+        ],
+        [
+          '5 идей: список ресурсов, анти-советы, ошибки новичков, разбор тренда, 5 шагов к результату.',
+          '3 идеи на сегодня: 1) совет в 3 шага, 2) разбор комментария подписчика, 3) «до/после» подхода.',
+          'Контент план на неделю: Вт — ошибки, Ср — гайд, Пт — кейс, Сб — личное, Вс — ответы на вопросы.'
+        ]
+      ];
+
+      function reanimateListItems() {
+        const items = ideasList.querySelectorAll('li');
+        items.forEach(function (li) {
+          li.style.animation = 'none';
+          li.style.opacity = '0';
+          li.style.transform = 'translateX(-12px)';
+        });
+        void ideasList.offsetHeight;
+        items.forEach(function (li, idx) {
+          li.style.animation = '';
+          li.style.animationDelay = (0.06 * idx) + 's';
+        });
+      }
+
+      function setBusy(isBusy) {
+        generateBtn.classList.toggle('is-busy', isBusy);
+        generateBtn.disabled = isBusy;
+        btnText.textContent = isBusy ? 'Генерирую…' : 'Сгенерировать идеи';
+      }
+
+      generateBtn.addEventListener('click', function () {
+        setBusy(true);
+        status.innerHTML = 'Подбираю варианты…';
+
+        const choice = presets[Math.floor(Math.random() * presets.length)];
+        const items = ideasList.querySelectorAll('li');
+        items.forEach(function (li, i) { li.textContent = choice[i]; });
+
+        reanimateListItems();
+
+        setTimeout(function () {
+          status.innerHTML = 'Готово: <strong>3 блока идей</strong> обновлены.';
+          setBusy(false);
+        }, 900);
+      });
+    })();
+  </script>
 </body>
 </html>
